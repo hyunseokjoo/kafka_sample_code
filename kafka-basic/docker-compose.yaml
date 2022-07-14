@@ -1,0 +1,39 @@
+version: '3'
+
+networks:
+  kafka_network:
+
+services:
+  zookeeper:
+    image: zookeeper:3.7
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVER: server.1=zookeeper:2888:3888
+    volumes:
+      - ./data/zookeeper/data:/data
+      - ./data/zookeeper/datalog:/datalog
+    networks:
+      - kafka_network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.0
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "eddie-test-topic:1:1"   # Topic명:Partition개수:Replica개수
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9091:9091"
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka_network
