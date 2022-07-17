@@ -1,5 +1,5 @@
-### cluster(zookeeper 1 , broekr 3)을 구축하여 sample 만들기 
-Architecture
+# cluster(zookeeper 1 , broekr 3)을 구축하여 sample 만들기 
+### Architecture
 - payment producer가 application으로 생각하고 간단한 payment 내용 만들어 topic에 send하기 
 - detect fraud에서 메세지 consume하여 데이터 분기 나눠 Fraud와 Legit 토픽으로 보내기 
 - processor fraud, legit에서 메세지 받아 로그 남기기
