@@ -1,0 +1,96 @@
+# ubuntu는 아래의 명령어 실행
+# tar는 https://docs.confluent.io/confluent-cli/current/install.html#confluent-cli-bundle-install주소로 이동하여 설치 
+curl -sL --http1.1 https://cnfl.io/cli | sh -s -- latest
+
+# ./bin/confluent가 생김
+# ./bin/confluent login으로 login 
+./bin/confluent login 
+# email password 입력
+
+# 환경 id 보기 
+confluent environment list
+
+# 환경 id 활성화 
+confluent environment use <env-id>
+# Now using {env-id} as the default (active) environment. 출력 확인
+
+# cluster list 확인
+confluent kafka cluster list
+# cluster 사용 확인
+confluent kafka cluster use <cluster-id>
+
+# api-key 생성
+confluent api-key create --resource <resource-id>
+# api-key 저장
+confluent api-key store <api-key> <api-secret> --resource <resource-id>
+# api-key 사용 적용
+confluent api-key use <api-key> --resource <resource-id>
+
+
+# confluent plugin list 확인 
+confluent connect plugin list
+          Plugin Name          |  Type
+--------------------------------+---------
+  ActiveMQSource                | source
+  AzureEventHubsSource          | source
+  AzureServiceBusSource         | source
+  BigQuerySink                  | sink
+  BigTableSink                  | sink
+  CloudWatchLogsSource          | source
+  CosmosDbSource                | sourc
+
+
+# confluent plugin 사용방법 알아보기
+confluent connect plugin describe RedisSink
+    The following are required configs:
+    connector.class : RedisSink
+    topics : ["topics" is required]
+    name : ["name" is required]
+    input.data.format : ["input.data.format" is required]
+    kafka.api.key : ["kafka.api.key" is required when "kafka.auth.mode==KAFKA_API_KEY"]
+    kafka.api.secret : ["kafka.api.secret" is required when "kafka.auth.mode==KAFKA_API_KEY"]
+    redis.hostname : ["redis.hostname" is required]
+    redis.portnumber : ["redis.portnumber" is required]
+    tasks.max : ["tasks.max" is required]
+
+# confluent plugin connector용 json파일 만들기
+touch test.json 
+vi test.json
+# 아래 내용 작성
+{
+    "connector.class" : RedisSink
+    "topics" : "myTopic"
+    "name" : "myConnectorName"
+    "input.data.format" : "JSON"
+    "kafka.api.key" : "myApikey"
+    "kafka.api.secret" : "myScretkey"
+    "redis.hostname" : "myRedisHostName"
+    "redis.portnumber" : "myRedisPort"
+    "tasks.max" : "myTasks"
+}
+
+# json 파일 만든 주소로 가서 json 파일 confluent에 올리기 
+confluent connect create --config test.json
+출력 - Created connector myConnectorName lcc-ix4dl
+
+# 커넥터 생성 되었는지 확인
+confluent connect list
+  ID      | Name            | Status  | Type | Trace
+----------+-----------------+---------+------+--------
+lcc-ix4dl | myConnectorName | RUNNING | sink | 
+
+
+
+
+
+
+
+
+
+
+# 참고문헌 
+confluent cli 사용법
+https://docs.confluent.io/confluent-cli/current/requirements.html
+
+confluent plugin 사용법
+https://docs.confluent.io/cloud/current/connectors/cc-postgresql-sink.html
