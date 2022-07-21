@@ -23,6 +23,7 @@ def generate_order_data():
     category = random.choice([0, 1, 2])
     menu = random.choice([0, 1, 2])
 
+    dic_user_id = [1, 2, 3]
     dic_customer_type = ["BRONZE", "SILVER", "PLATINUM"]
 
     dic_menu = [
@@ -39,19 +40,21 @@ def generate_order_data():
 
     dic_discount = [1.0, 0.9, 0.8]
 
+    choiced_user_id = dic_user_id[customer_type]
     choiced_customer_type = dic_customer_type[customer_type]
     choiced_menu = dic_menu[category][menu]
     choiced_price = dic_price[category][menu] * dic_discount[customer_type]
 
-    return choiced_customer_type, choiced_menu, choiced_price
+    return choiced_user_id, choiced_customer_type, choiced_menu, choiced_price
 
 
 while True:
     d, t = get_time_date()
-    choiced_customer_type, choiced_menu, choiced_price  = generate_order_data()
+    choiced_user_id, choiced_customer_type, choiced_menu, choiced_price  = generate_order_data()
     new_data = {
         "DATE" : d,
         "TIME" : t,
+        "USER_ID" : choiced_user_id,
         "CUSTOMER_TYPE" : choiced_customer_type,
         "MENU" : choiced_menu,
         "PRICE" : choiced_price,
@@ -60,3 +63,4 @@ while True:
     producer.send(TOPIC_NAME, json.dumps(new_data).encode("utf-8"))
     print(new_data)
     time.sleep(1)
+
