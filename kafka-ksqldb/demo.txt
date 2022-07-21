@@ -1,0 +1,37 @@
+# order Topic 실행
+docker exec -it broker kafka-topics --bootstrap-server broker:9092 --create --topic order
+
+# message 게시
+python producer-order.py
+
+# ksql cli 실행
+docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
+
+# log메세지 
+SET 'auto.offset.reset' = 'earliest';
+
+# stream 만들기 as topic
+CREATE STREAM order_stream(date varchar, time varchar, user_id bigint, customer_type varchar, menu varchar, price int) WITH (kafka_topic='order', value_format='json',partitions=1);
+
+# stream 내용 보기 
+describe order_stream;
+
+# stream 메세지 조회 하기 (pull query)
+select * from order_stream;
+# stream 메세지 조회 하기 (push query)
+select * from order_stream emit changes;
+
+# stream 만들기 as select stream
+create stream order_stream_sel_platinum as select * from order_stream where customer_type = 'PLATINUM';
+
+# table 만들기 as select 
+CREATE TABLE order_table_groupby_menu as select menu, sum(price) sum_price from order_stream group by menu;
+# table 상태 조회 하기
+selecT * from order_table_groupby_menu;
+
+# join 테이블;
+selecT a.date, a.time, a.user_id, a.customer_type, a.menu, a.price, b.sum_price from order_stream a inner join order_table_groupby_menu b on a.menu = b.menu emit changes;
+
+# window table 만들기
+create table order_window_1hour as select menu, count(*) cnt from order_stream window tumbling(size 1 hour) group by menu having count(*) > 3 emit changes;
+selecT * from order_window_1hour;

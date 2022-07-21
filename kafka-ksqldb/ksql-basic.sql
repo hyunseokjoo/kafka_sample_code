@@ -35,9 +35,15 @@ CREATE TABLE order_table(date varchar, time varchar, customer_type varchar, menu
 
 -- ksql-Table 생성 with select  
 CREATE TABLE order_table_groupby_menu as select menu, sum(price) from order_stream group by menu;  
-CREATE TABLE order_table_groupby_menu as select customer_type, count(*) from order_stream group by customer_type;  
+CREATE TABLE order_table_groupby_customer_type as select customer_type, count(*) from order_stream group by customer_type;  
+
+--stream-table join 하기
+selecT a.date, a.time, a.user_id, a.customer_type, a.menu, a.price, b.sum_price from order_stream a inner join order_table_groupby_menu b on a.menu = b.menu emit changes;
+
 -- window 함수 test용 query 1시간 안에 주문이 3개가 넘는 것을 가져오는 쿼리
-create table order_window_1hour as select menu, count(*) from order_stream window tumbling(size 1 hour) group by menu having count(*) > 3 emit changes;
+create table order_window_1hour as select menu, count(*) cnt from order_stream window tumbling(size 1 hour) group by menu having count(*) > 3 emit changes;
+
+selecT menu, timestampToString(WindowStart, 'yy/MM/dd HH:mm:ss'), timestampToString(WindowEnd, 'yy/MM/dd HH:mm:ss'), cnt from order_window_1hour; 
 
 -- ksql-stream push query(실시간 consume)
 -- EMIT CHANGES 절을 추가하면 push query(실시간으로 consume하게)하게 된다.
@@ -49,6 +55,9 @@ SELECT date, time, menu, price FROM order_stream;
 SELECT date, time, menu, price FROM order_table;
 
 
+--query 확인 하기 
+show queries;
+explain <query id>;
 
 --삭제--
 --stream 삭제
