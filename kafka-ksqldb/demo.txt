@@ -34,4 +34,5 @@ selecT a.date, a.time, a.user_id, a.customer_type, a.menu, a.price, b.sum_price 
 
 # window table 만들기
 create table order_window_1hour as select menu, count(*) cnt from order_stream window tumbling(size 1 hour) group by menu having count(*) > 3 emit changes;
-selecT * from order_window_1hour;
+selecT * from order_window_1hour; 
+selecT menu, timestampToString(WindowStart, 'yy/MM/dd HH:mm:ss'), timestampToString(WindowEnd, 'yy/MM/dd HH:mm:ss'), cnt from order_window_1hour; 
