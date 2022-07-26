@@ -1,5 +1,8 @@
 kafka-basic/data
 kafka-example/data
 kafka-ksqldb/data
+kafka-connector/data
+kafka-connector/lib
+kafka-connector/db
 .idea
 .bsp
