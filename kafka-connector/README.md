@@ -2,6 +2,14 @@ docker에 container 올리기
 ```bash
 docker-compose up -d
 ```
+confluent-hub에서 jdbc connector 다운로드하고 broker서버에 압축풀기 
+https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc
+
+connect 서버 properties에 plugin-path에 압축푼 경로 정해주기
+```bash 
+vi ./etc/kafka/connect-distributed.properties
+plugin-path=/usr/share/java
+```
 
 DB 만들기
 ```bash
