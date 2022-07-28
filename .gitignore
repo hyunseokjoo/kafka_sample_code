@@ -4,5 +4,6 @@ kafka-ksqldb/data
 kafka-connector/data
 kafka-connector/lib
 kafka-connector/db
+kafka-scala/data
 .idea
 .bsp
