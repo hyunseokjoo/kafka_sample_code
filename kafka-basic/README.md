@@ -1,7 +1,6 @@
 # cluster(zookeeper 1, broker 1)를 구성하여 메세지 보내고 받기 
 
-### 목표 및 순서
-- docker파일 작성
+### 실습 순서 
 - docker-compose를 사용하여 cluster올리기
 - topic 생성
 - Producer code 생성
