@@ -2,6 +2,10 @@
 spark 홈페이지에 있는 Dstream 형식으로
 word Count 하는 Spark Streaming 예제
 
+Dstream이란?
+Discretized Streams 의 줄임말로 Spark Streaming에서 기본적으로 제공하는 추상화
+특정 간격의 데이터가 RDD형식으로 입력이 되는 구조를 뜻 함
+
 Dstream의 특징
 - spark 기존 API
 - RDD 기반
@@ -10,6 +14,17 @@ Dstream의 특징
 
 RDD기반이기 때문에 보통 사용하지 않고,
 Streaming은 Structured Streaming으로 사용을 한다.
+
+사용법
+- dstream_wordcount spark를 실행 한 다음
+- 아래 코드는 1초마다 받는것이기 때문에 streaming이 1초마다 발생하게 된다(즉, RDD가 1초마다 발생하게 된다.)
+- 다른 터미널에서 명령어 nc -lk 9999를 사용하여 word 입력하면 아래와 같은 형식으로 반환 되게 된다.
+-------------------------------------------
+Time: 1357008430000 ms
+-------------------------------------------
+(hello,1)
+(world,1)
+
 */
 
 package spark_streaming_home_demo
@@ -17,7 +32,7 @@ package spark_streaming_home_demo
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-object streaming_dstream_wordcount extends App {
+object dstream_wordcount extends App {
   val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount") // local에 2개의 코어를 가지고 spark를 돌린다는 의미
   val ssc = new StreamingContext(conf, Seconds(1)) // 1초 단위로 Streaming한다는 의미
 

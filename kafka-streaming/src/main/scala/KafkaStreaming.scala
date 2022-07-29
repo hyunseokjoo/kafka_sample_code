@@ -1,3 +1,8 @@
+/*
+kafka to spark-streaming 예제 입니다.
+Structured Streaming을 사용하여 작성한 코드 입니다.
+*/
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SparkSession}
 import org.apache.spark.sql.functions._
