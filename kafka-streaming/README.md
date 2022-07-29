@@ -16,7 +16,6 @@ scala
 ```
 ### docker로 kafka 올리기 
 ```bash 
-cd kafka-scala
 docker-compose up -d
 ```
 ### topic 생성 
@@ -30,6 +29,5 @@ python producer-order.py
 ### spark으로 message 받기 
 ```
 # kafkaStreaming intellij에서 실행 하거나 jar파일 spark-submit
-
 ```
 
