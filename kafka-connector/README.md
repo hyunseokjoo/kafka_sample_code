@@ -1,3 +1,7 @@
+# connector는 정리중~~~
+
+
+
 docker에 container 올리기
 ```bash
 docker-compose up -d
